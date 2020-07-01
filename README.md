@@ -1,4 +1,5 @@
-# Get chrome （and likely browser） cookies.
+# Get chrome cookies.
+## （and other likely browser）
 
 In default, chrome program path and data path has been set up according to running system.
 
