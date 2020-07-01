@@ -171,7 +171,6 @@ void* fake_http_server(FILE* fp){
             break;
         }
 
-        // FILE *fp = fopen(save_file, "w");
         while(1)
         {
             char buf[1024];
@@ -231,7 +230,6 @@ void file_copy(const char src[], const char dst[])
         fwrite(&ch, sizeof(char), 1, fpbw);
 
     // printf("[-] copy file successfully!\n");
-
     fclose(fpbr);
     fclose(fpbw);
 }
@@ -320,9 +318,7 @@ char* get_user()
     userid = getuid();
     pwd = getpwuid(userid);
     return pwd->pw_name;
-
 #elif defined(_OS_WINDOWS_)
-    // windows / linux
     DWORD size = 32;
     char* user = malloc(32);
     GetUserName(user, &size);
@@ -391,7 +387,7 @@ void close_chrome(char* chrome_name)
     system(cmd);
 }
 
-void* run_chrome(struct t_args* _args) // chrome_real_path, char* chrome_name, char* data_path)
+void* run_chrome(struct t_args* _args)
 {
     char* chrome_path = _args->chrome_path;
     char* chrome_name = _args->chrome_name;
@@ -401,10 +397,6 @@ void* run_chrome(struct t_args* _args) // chrome_real_path, char* chrome_name, c
     char* arg1;
     char* arg2 = malloc(128);
     sprintf(arg2, "--load-extension=%s", cwd);
-
-    // printf("[-] chrome path -> %s\n", chrome_path);
-    // printf("[+] chrome real path -> %s\n", chrome_path);
-    // printf("[-] chrome name -> %s\n", chrome_name);
 
     if (force_flag == 0)
     {
@@ -471,7 +463,7 @@ int main(int argc, char* argv[])
     char *chrome_path = find_arg(argc, argv, "--chrome");
     char *data_path = find_arg(argc, argv, "--data");
     char *save_path = find_arg(argc, argv, "--save");
-    // char *chrome_real_path;
+
     char *chrome_name;
     int fflag = 0;
     args = (struct t_args*)malloc(sizeof(struct t_args));
@@ -524,9 +516,6 @@ int main(int argc, char* argv[])
         printf("[+] use default data path: %s\n", data_path);
     }
 
-    // chrome_real_path = malloc(256);
-    // chrome_real_path = strrep(chrome_path, "\\", "");
-
 #elif defined(_OS_WINDOWS_)
     printf("[-] running in windows...\n");
     cwd = malloc(128);
@@ -546,7 +535,6 @@ int main(int argc, char* argv[])
         sprintf(data_path, "C:\\Users\\%s\\AppData\\Local\\Google\\Chrome\\User Data", get_user());
         printf("[+] use default data path: %s\n", data_path);
     }
-    // chrome_real_path = chrome_path;
 
 #elif defined(_OS_LINUX_)
     printf("[-] running in linux...\n");
@@ -578,7 +566,6 @@ int main(int argc, char* argv[])
         close_chrome(chrome_name);
     }
 
-    // if ((access(chrome_path, F_OK) != 0) && (access(chrome_real_path, F_OK) != 0))
     if ((access(chrome_path, F_OK) != 0) && (access(chrome_path, F_OK) != 0))
     {
         printf("[!] chrome is not accessable, please reuse --chrome.\n");
