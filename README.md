@@ -1,4 +1,4 @@
-# Get chrome cookies by command line.
+# Get chrome （and likely browser） cookies.
 
 In default, chrome program path and data path has been set up according to running system.
 
