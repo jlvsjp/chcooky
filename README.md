@@ -1,5 +1,7 @@
 # Get chrome cookies.
-## （and other likely browser）
+
+This tool is for getting chromeand other likely browser cookies, while these saved in the 
+[Cookies] sqlite database are encrypted.
 
 In default, chrome program path and data path has been set up according to running system.
 
