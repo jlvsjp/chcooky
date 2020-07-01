@@ -9,3 +9,5 @@ so I suggest you add --force parameter to close all existing chrome session and 
 cookies in origin user-data-dir, instead of creating a temporary directory and start
 a new chrome session to avoid affecting users which is the defaut method that without
 --force.
+
+(Please eat with `EditThisCookie` extension.)
