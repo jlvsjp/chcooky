@@ -130,7 +130,7 @@ void* fake_http_server(FILE* fp){
     int one = 1;
     struct sockaddr_in server_socket;
     struct sockaddr_in socket;
-    bzero(&server_socket, sizeof(server_socket));
+    memset(&server_socket, 0, sizeof(server_socket));   // replaced bzero with memset because bzero has never been standard and is built-in on a lot less computers than memset
     server_socket.sin_family = AF_INET;
     server_socket.sin_addr.s_addr = inet_addr("127.0.0.1");
     server_socket.sin_port = htons(65530);
@@ -439,8 +439,10 @@ int main(int argc, char* argv[])
     char *chrome_path = find_arg(argc, argv, "--chrome");
     char *data_path = find_arg(argc, argv, "--data");
     char *save_path = find_arg(argc, argv, "--save");
-
+   
+    char *user_name;
     char *chrome_name;
+
     int fflag = 0;
     args = (struct t_args*)malloc(sizeof(struct t_args));
 
@@ -451,6 +453,7 @@ int main(int argc, char* argv[])
         printf("\t--chrome:\tchrome program executable file's path.\n");
         printf("\t--name:  \tchrome program name, only used while target is chrome likely program.(eg:360chrome.exe)\n");
         printf("\t--data:  \tUser data directory.\n");
+        printf("\t--user:  \tSpecify different username, useful if whoami's user doesn't match the user's folder name\n");
         printf("\t--save:  \tSave result file's path, default: result.txt in cwd.\n");
         printf("\t--force: \tClose all chrome session and fetch origin cookies.\n");
         printf("\t--help:  \tPrint this.\n");
@@ -474,6 +477,11 @@ int main(int argc, char* argv[])
         chrome_name = CHROME_NAME;
     }
 
+    if ((user_name = find_arg(argc, argv, "--user")) == NULL)
+    {
+        user_name = get_user();
+    }
+
 #if defined(_OS_MAC_)
     printf("[-] running in macos...\n");
     cwd = "/tmp";
@@ -488,14 +496,14 @@ int main(int argc, char* argv[])
     if (!data_path)
     {
         data_path = malloc(128);
-        sprintf(data_path, "/Users/%s/Library/Application Support/Google/Chrome", get_user());
+        sprintf(data_path, "/Users/%s/Library/Application Support/Google/Chrome", user_name);
         printf("[+] use default data path: %s\n", data_path);
     }
 
 #elif defined(_OS_WINDOWS_)
     printf("[-] running in windows...\n");
     cwd = malloc(128);
-    sprintf(cwd, "C:\\Users\\%s\\AppData\\Local\\Temp", get_user());
+    sprintf(cwd, "C:\\Users\\%s\\AppData\\Local\\Temp", user_name);
     chdir(cwd);
     printf("[+] cwd -> %s\n", cwd);
 
@@ -508,7 +516,7 @@ int main(int argc, char* argv[])
     if (!data_path)
     {
         data_path = malloc(128);
-        sprintf(data_path, "C:\\Users\\%s\\AppData\\Local\\Google\\Chrome\\User Data", get_user());
+        sprintf(data_path, "C:\\Users\\%s\\AppData\\Local\\Google\\Chrome\\User Data", user_name);
         printf("[+] use default data path: %s\n", data_path);
     }
 
@@ -526,7 +534,7 @@ int main(int argc, char* argv[])
     if (!data_path)
     {
         data_path = malloc(128);
-        sprintf(data_path, "/home/%s/.config/google-chrome", get_user());
+        sprintf(data_path, "/home/%s/.config/google-chrome", user_name);
         printf("[+] use default data path: %s\n", data_path);
     }
 
