@@ -151,13 +151,11 @@ void* fake_http_server(FILE* fp){
 
     else if(listen(sock, 5) < 0)
     {
-        printf("[!] listen error!\n");
+        printf("[!] port 65530 listen error!\n");
         status = -1;
     }
-    else
-    {
-        printf("[+] port 65530 listen success!\n");
-    }
+    else printf("[+] port 65530 listen success!\n");
+
 
     while(!status)
     {
@@ -427,7 +425,7 @@ void* run_chrome(struct t_args* _args)
 #ifndef _OS_WINDOWS_
 void sig_handler(int sig)
 {
-    status = 2;
+    status = -1;
 }
 #endif
 
@@ -529,8 +527,6 @@ int main(int argc, char* argv[])
         sprintf(data_path, "/home/%s/.config/google-chrome", get_user());
         printf("[+] use default data path: %s\n", data_path);
     }
-
-    // chrome_real_path = chrome_path;
 
 #endif
 
