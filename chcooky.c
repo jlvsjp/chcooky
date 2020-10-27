@@ -199,7 +199,7 @@ int start_chrome(char* chrome_path, char* user_data)
 
     BOOL bRet = CreateProcess (
         NULL,   // 不在此指定可执行文件的文件名
-      c  cmd,    // 命令行参数
+        cmd,    // 命令行参数
         NULL,   // 默认进程安全性
         NULL,   // 默认进程安全性
         FALSE,  // 指定当前进程内句柄不可以被子进程继承
