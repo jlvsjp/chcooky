@@ -3,26 +3,31 @@ SOURCE	:=	chcooky.c
 
 macos: $(TARGET)_macos
 
-$(TARGET)_macos:
-	gcc $(SOURCE) -D__MACOSX__ -lpthread -o $(TARGET)_macos
+$(TARGET)_macos: chcooky.c libchcooky.go
+	go build -x -v -ldflags "-s -w" -buildmode=c-archive -o libchcooky.a libchcooky.go
+	gcc $(SOURCE) -D__MACOSX__ -L. -lchcooky -o $(TARGET)_macos -framework CoreFoundation -framework Security
 	strip $(TARGET)_macos
-	mv $(TARGET)_macos ./bin/macos
+	mv $(TARGET)_macos ./bin/$(TARGET)_macos
+	rm libchcooky.a
+	rm libchcooky.h
 
 windows: $(TARGET)_windows.exe
 
-$(TARGET)_windows.exe:
-	gcc $(SOURCE) -D__NT__ -lpthread -lwsock32 -static -o $(TARGET)_windows.exe
-	move $(TARGET)_windows.exe ./bin/windows
+$(TARGET).exe: chcooky.c libchcooky.go
+	go env -w GOARCH=386
+	go build -x -v -ldflags "-s -w" -buildmode=c-archive -o libchcooky.a libchcooky.go
+	gcc -m32 -L. -lchcooky -o $(TARGET).exe $(SOURCE)
+	strip $(TARGET).exe
+	move $(TARGET).exe .\\bin\\$(TARGET).exe
+	del libchcooky.a
+	del libchcooky.h
 
 linux: $(TARGET)_linux ./bin/$(TARGET)_linux_static
 
 $(TARGET)_linux:
-	gcc $(SOURCE) -lpthread -o $(TARGET)_linux_static
+	go build -x -v -ldflags "-s -w" -buildmode=c-archive -o libchcooky.a libchcooky.go
+	gcc $(SOURCE) -L. -lchcooky -o $(TARGET)_linux
 	strip $(TARGET)_linux
-	mv $(TARGET)_linux ./bin/linux
-
-$(TARGET)_linux_static:
-	gcc $(SOURCE) -lpthread -static -o $(TARGET)_linux_static
-	strip $(TARGET)_linux_static
-	mv $(TARGET)_linux_static ./bin/linux
-
+	mv $(TARGET)_linux ./bin/$(TARGET)_linux
+	rm libchcooky.a
+	rm libchcooky.h
