@@ -54,7 +54,7 @@ void print_help(char* argv0)
     printf("Options:\n");
     printf("\t--chrome:  \tChrome program executable file's path.\n");
     printf("\t--data:    \tChrome program user-data-dir.\n");
-    printf("\t--headless:\tEnable headless mode.(Windows default enabled.)\n");
+    printf("\t--headless:\tEnable headless mode.(Recommended when working on Windows platform.)\n");
     printf("\t--save:    \tSave result file's path, default: result.txt in cwd.\n");
     printf("\t--help:    \tPrint this.\n");
 }
@@ -107,9 +107,9 @@ void file_copy(const char src[], const char dst[])
     }
 
     // Copy file with fread() and fwrite()
-    char ch;
-    while (fread(&ch, sizeof(char), 1, fpbr) != 0)
-        fwrite(&ch, sizeof(char), 1, fpbw);
+    char ch[4096];
+    while (fread(ch, sizeof(char), 1, fpbr) != 0)
+        fwrite(ch, sizeof(char), 1, fpbw);
 
     // printf("[-] copy file successfully!\n");
     fclose(fpbr);
@@ -331,7 +331,7 @@ int main(int argc, char* argv[])
     if (!userdata)
 #if defined(_OS_WINDOWS_)
     {
-        printf("Parameter [userdata] invalid! Hint: May \"%s%s\"\n", profile, DEFAULT_USERDATA);
+        printf("Parameter [userdata] invalid!\nHint: May \"%s%s\"\n", profile, DEFAULT_USERDATA);
         return -1;
     }
 #elif defined(_OS_MAC_)
@@ -377,7 +377,12 @@ int main(int argc, char* argv[])
 
     // sleep(1);
     printf("[+] URL: %s\n", url);
-    dbg_ws_url = GetChromeDBGUrl(url);
+    while (true)
+    {
+        dbg_ws_url = GetChromeDBGUrl(url);
+        if (dbg_ws_url) break;
+    }
+
     printf("[-] Debug websocket url: %s\n", dbg_ws_url);
     cookies = GetChromeCookiesFromWS(dbg_ws_url);
     printf("[+] Cookies -> \n%s\n", cookies);

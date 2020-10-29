@@ -56,7 +56,7 @@ func GetChromeDBGUrl(url *C.char) *C.char {
 	if err != nil {
 		// handle error
 		log.Fatal("Error in http.Get: ", err)
-		return nil
+		panic("")
 	}
 
 	defer resp.Body.Close()
@@ -71,8 +71,12 @@ func GetChromeDBGUrl(url *C.char) *C.char {
 		return nil
 	}
 
-	wsurl := dat[0]["webSocketDebuggerUrl"].(string)
-	return C.CString(wsurl)
+	if (len(dat) == 0){
+		return nil
+	} else {
+		wsurl := dat[0]["webSocketDebuggerUrl"].(string)
+		return C.CString(wsurl)
+	}
 }
 
 
