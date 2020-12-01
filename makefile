@@ -22,7 +22,7 @@ $(TARGET).exe: $(SOURCE) libchcooky.a
 linux: $(TARGET)_linux
 
 $(TARGET)_linux: $(SOURCE) libchcooky.a
-	gcc -o $(TARGET)_linux $(SOURCE) libchcooky.a
+	gcc -o $(TARGET)_linux $(SOURCE) libchcooky.a -lpthread
 	strip $(TARGET)_linux
 	mv $(TARGET)_linux ./bin/$(TARGET)_linux
 	rm libchcooky.a
