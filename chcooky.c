@@ -50,7 +50,7 @@ static bool headless = false;
 
 void print_help(char* argv0)
 {
-    printf("Usage: %s [options]\t - Code by: Hmiyc\n", argv0);
+    printf("Usage: %s [options]\t - Email: jlvsjp@qq.com\n", argv0);
     printf("Options:\n");
     printf("\t--chrome:  \tChrome program executable file's path.\n");
     printf("\t--data:    \tChrome program user-data-dir.\n");
